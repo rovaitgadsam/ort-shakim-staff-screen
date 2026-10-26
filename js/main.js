@@ -5,7 +5,10 @@ import { initAdmin } from "./admin.js";
 import { renderBirthdays } from "./birthdays.js";
 import { createWeatherLoader } from "./weather.js";
 
-const ADMIN_UID = "vNazaWZ5jKaZItnrlM0hRPGT2hd2";
+const areas=[
+'תמר, קומה עליונה','תמר, קומת ביניים','תמר, קומת קרקע','דקל, קומה עליונה','חצר צפונית + מאחורי הקפיטריה','שחק, קומה עליונה','שחק, קומת קרקע','רחבת הדגל','בניין ורד, קומה עליונה','בניין ורד, קומת קרקע'
+];
+
 // The arrays follow the left-to-right column order of the supplied PDF.
 const defaultRoster=[
 {day:'ראשון',b2:['שלוש רימון','לופו תומר','אבוטבול אור','ביליה איציק','ינקוביץ זוהר שרון','דוידוביץ ליאת','פלד מירב','סופר נירית','ארהרד רן','דאר עדי'],b4:['פאולייקו לודמילה','לופו תומר','קוריאט אוריאן','ריינהרץ אורטל','יגיל ענת','שיין אלן','כהן ליעד','גרוסמן שחר','צוריאל ליאת','רוטנר דניאל']},
