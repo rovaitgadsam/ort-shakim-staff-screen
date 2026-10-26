@@ -57,3 +57,34 @@ renderBirthdays(escapeHtml);
 loadWeather();
 setInterval(() => { formatDates(); renderDuties(); }, 60000);
 setInterval(loadWeather, 30 * 60 * 1000);
+ 
+// Toggle browser fullscreen directly from a user click.
+const fullscreenBtn = document.getElementById("fullscreenBtn");
+function syncFullscreenButton() {
+  if (!fullscreenBtn) return;
+  const active = Boolean(document.fullscreenElement);
+  fullscreenBtn.textContent = active ? "⤢ יציאה ממסך מלא" : "⛶ הצג במסך מלא";
+  fullscreenBtn.setAttribute("aria-pressed", String(active));
+  fullscreenBtn.title = active ? "יציאה ממסך מלא" : "הצגת האתר במסך מלא";
+}
+if (fullscreenBtn) {
+  fullscreenBtn.addEventListener("click", async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else if (document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        throw new Error("Fullscreen API is not supported by this browser");
+      }
+    } catch (error) {
+      console.error("Fullscreen toggle failed", error);
+      fullscreenBtn.textContent = "לא ניתן להציג במסך מלא";
+      fullscreenBtn.title = "אפשר לנסות דרך תפריט הדפדפן";
+      window.setTimeout(syncFullscreenButton, 2500);
+    }
+  });
+  document.addEventListener("fullscreenchange", syncFullscreenButton);
+  syncFullscreenButton();
+}
+
