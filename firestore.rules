@@ -2,15 +2,15 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Publicly readable dashboard data. Only the configured administrator can edit it.
+    // Publicly readable dashboard. Only the configured administrator can edit it.
     match /siteData/main {
       allow read: if true;
       allow write: if request.auth != null
                    && request.auth.uid == "vNazaWZ5jKaZItnrlM0hRPGT2hd2";
     }
 
-    // A signed-in anonymous visitor may submit a short message for moderation.
-    // Only the configured administrator can read or delete submissions.
+    // Public QR form: anonymous users may create a short pending message only.
+    // Only the configured administrator may read/delete submissions.
     match /messageSubmissions/{submissionId} {
       allow create: if request.auth != null
                     && request.auth.token.firebase.sign_in_provider == "anonymous"
@@ -22,7 +22,7 @@ service cloud.firestore {
                     && request.resource.data.text.size() > 0
                     && request.resource.data.text.size() <= 280
                     && request.resource.data.status == "pending"
-                    && request.resource.data.createdAt == request.time;
+                    && request.resource.data.createdAt is timestamp;
       allow read, delete: if request.auth != null
                           && request.auth.uid == "vNazaWZ5jKaZItnrlM0hRPGT2hd2";
       allow update: if false;
