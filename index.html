@@ -15,6 +15,46 @@ main{padding:24px 3vw;display:grid;grid-template-columns:minmax(0,1.55fr) minmax
 .period-block{margin-top:14px}.period-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:14px 0 10px;padding-bottom:8px;border-bottom:2px solid #dce7f0}.period-heading h3{margin:0;color:var(--blue);font-size:clamp(19px,1.65vw,25px)}.period-heading span{font-size:14px;color:var(--muted);font-weight:700}.areas-grid{direction:ltr;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.area-card{direction:rtl;border:1px solid #dce7f0;border-radius:12px;padding:10px 9px;background:linear-gradient(150deg,#fff,#f8fbfe);min-width:0;min-height:82px;display:flex;flex-direction:column;gap:7px}.area-card h4{margin:0;color:var(--blue);font-size:clamp(12px,1.02vw,16px);line-height:1.25}.area-names{font-size:clamp(14px,1.18vw,18px);line-height:1.35;font-weight:700;white-space:pre-wrap;overflow-wrap:anywhere}.area-names.empty{color:#93a1b1;font-weight:400}.period-block.second .area-card{background:linear-gradient(150deg,#fff,#f1fbf8)}.period-block.second .area-card h4{color:#087f70}.empty{color:#8292a5;font-weight:400}
 .roster-zone-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.zone-field{border:1px solid #e0e8ef;border-radius:9px;padding:8px;min-width:0}.zone-field label{font-size:12px;line-height:1.25;display:block;margin-bottom:5px}.zone-field input{font:inherit;font-size:13px;border:1px solid #cbd8e5;border-radius:7px;padding:8px;width:100%;min-width:0}
 .side{display:flex;flex-direction:column;gap:22px}.announcements{display:flex;flex-direction:column;gap:12px}.notice{border-right:5px solid var(--gold);background:#fff8e6;border-radius:12px;padding:13px 15px;font-size:clamp(17px,1.4vw,21px);line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}.notice:nth-child(even){border-right-color:var(--teal);background:#edfbf8}.weather-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.weather-temp{font-size:clamp(38px,4vw,62px);font-weight:800;color:var(--blue)}.weather-detail{font-size:18px;color:var(--muted);line-height:1.7}.weather-icon{font-size:52px}.weather-foot{font-size:13px;color:#8392a2;margin-top:10px}
+.birthday-panel{background:linear-gradient(135deg,#fff8dc,#fff0f6);border:1px solid #f2d28c;overflow:hidden}
+.birthday-panel h2{color:#78385f}
+.birthday-icon{background:#ffe1ee}
+.birthday-content{display:flex;flex-direction:column;gap:6px;min-width:0}
+.birthday-greeting{font-size:clamp(18px,1.45vw,24px);font-weight:900;color:#a33872;line-height:1.2}
+.birthday-subtitle{margin:0;font-size:clamp(13px,1vw,16px);line-height:1.35;color:#644b60}
+.birthday-names{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.birthday-name{background:#fff;border:1px solid #f0bfd5;border-radius:99px;padding:5px 10px;font-size:clamp(14px,1.05vw,18px);font-weight:800;color:#65354f}
+.birthday-confetti{font-size:19px;letter-spacing:3px;line-height:1.1}
+.birthday-empty{font-weight:800;color:#885174;font-size:clamp(15px,1.1vw,18px)}
+@media (min-width:1200px) and (min-height:760px){
+  header{padding:10px 2vw 8px}
+  .brand .mark{width:60px;height:60px;flex-basis:60px}
+  .brand h1{font-size:clamp(25px,2.5vw,38px);margin-bottom:4px}
+  main{height:calc(100vh - 140px);padding:12px 2vw;gap:14px;overflow:hidden}
+  .panel{padding:15px;border-radius:18px}
+  .panel h2{font-size:clamp(19px,1.45vw,25px);margin-bottom:9px;gap:8px}
+  .icon{width:34px;height:34px;border-radius:10px;font-size:20px}
+  .today-label{font-size:13px;padding:5px 10px;margin-bottom:8px}
+  .side{gap:10px;min-height:0}
+  .side .panel{padding:11px 14px}
+  .announcements{gap:7px}
+  .notice{font-size:clamp(15px,1.1vw,18px);padding:8px 11px;line-height:1.25}
+  .weather-row{gap:8px}
+  .weather-temp{font-size:clamp(34px,3.3vw,48px)}
+  .weather-detail{font-size:clamp(14px,1.05vw,17px);line-height:1.4}
+  .weather-icon{font-size:40px}
+  .weather-foot{font-size:11px;margin-top:5px}
+  .period-block{margin-top:8px}
+  .period-heading{margin:8px 0 6px;padding-bottom:5px}
+  .period-heading h3{font-size:clamp(17px,1.25vw,21px)}
+  .period-heading span{font-size:12px}
+  .areas-grid{gap:6px}
+  .area-card{min-height:58px;padding:7px 6px;gap:4px;border-radius:9px}
+  .area-card h4{font-size:clamp(11px,.82vw,14px);line-height:1.2}
+  .area-names{font-size:clamp(12px,.95vw,15px);line-height:1.25}
+  footer{padding:0 2vw 5px;font-size:11px}
+}
+@media (min-width:1200px) and (min-height:760px){body{height:100vh;overflow:hidden}}
+
 footer{display:flex;justify-content:space-between;padding:0 3vw 20px;color:#8a9aab;font-size:13px}
 .admin-btn{position:fixed;bottom:18px;left:18px;border:0;background:#102a43;color:#fff;border-radius:99px;padding:13px 18px;font-size:16px;font-weight:700;box-shadow:0 6px 20px #102a4330;cursor:pointer;z-index:4}
 #admin{display:none;position:fixed;inset:0;background:#edf3f8;z-index:10;overflow:auto;padding:24px}#admin.open{display:block}.admin-wrap{max-width:1200px;margin:auto}
@@ -36,6 +76,7 @@ footer{display:flex;justify-content:space-between;padding:0 3vw 20px;color:#8a9a
 <section class="panel"><h2><span class="icon">📍</span> תורנויות היום</h2><div class="today-label" id="todayLabel">תורנויות להיום</div><div id="dutyCards"></div></section>
 <div class="side">
 <section class="panel"><h2><span class="icon">📣</span> הודעות חשובות</h2><div id="announcements" class="announcements"></div></section>
+<section class="panel birthday-panel"><h2><span class="icon birthday-icon">🎉</span> ימי הולדת בסגל</h2><div id="birthdaysContent" class="birthday-content"></div></section>
 <section class="panel"><h2><span class="icon">🌤️</span> מזג האוויר</h2><div class="weather-row"><div><div class="weather-temp" id="temp">--°</div><div class="weather-detail" id="weatherDetail">מעדכן תחזית…</div></div><div class="weather-icon" id="weatherIcon">🌤️</div></div><div class="weather-foot" id="weatherFoot">תחזית לנהריה, מתעדכנת אוטומטית כשיש חיבור לאינטרנט</div></section>
 </div></main><footer><span>אורט שחקים | חדר המורים</span><span id="updatedAt">המסך מתעדכן אוטומטית</span></footer>
 <button class="admin-btn" id="openAdmin">⚙ מסך ניהול</button>
@@ -85,6 +126,101 @@ function showLoginError(message) {
 const areas=[
 'תמר, קומה עליונה','תמר, קומת ביניים','תמר, קומת קרקע','דקל, קומה עליונה','חצר צפונית + מאחורי הקפיטריה','שחק, קומה עליונה','שחק, קומת קרקע','רחבת הדגל','בניין ורד, קומה עליונה','בניין ורד, קומת קרקע'
 ];
+
+const birthdays = [
+  {name:"אור אבוטבול", month:4, day:19},
+  {name:"חזי אדמוני", month:7, day:22},
+  {name:"הדר אהרוני", month:11, day:30},
+  {name:"צחי אוברמן", month:6, day:12},
+  {name:"איציק אוחיון", month:3, day:12},
+  {name:"אורה אוסיפוב", month:7, day:12},
+  {name:"רעיה אזולאי", month:6, day:19},
+  {name:"ולדי איטוביץ", month:1, day:25},
+  {name:"רינת אירלנד", month:1, day:31},
+  {name:"דורון אלגרבלי", month:7, day:21},
+  {name:"שולי אליקן", month:12, day:2},
+  {name:"טליה אמודאי", month:10, day:5},
+  {name:"נורית אמיר בורר", month:12, day:22},
+  {name:"שי אמנוני", month:10, day:11},
+  {name:"שחף אסס", month:2, day:21},
+  {name:"רן ארהרד", month:6, day:14},
+  {name:"ערן אשל", month:9, day:22},
+  {name:"יגאל בוכריס", month:6, day:14},
+  {name:"ענבר ביטון", month:11, day:30},
+  {name:"יצחק ביליה", month:11, day:16},
+  {name:"גלי בכר", month:1, day:27},
+  {name:"ליאת בן אור", month:8, day:24},
+  {name:"איתי בן טל", month:4, day:18},
+  {name:"דנה בן יאיר", month:4, day:23},
+  {name:"ערן בן עזרא", month:12, day:28},
+  {name:"ליאור בנסטי", month:4, day:7},
+  {name:"דורית בר", month:5, day:8},
+  {name:"טל בר", month:5, day:12},
+  {name:"קרן בר", month:2, day:16},
+  {name:"אביב בר לב", month:1, day:7},
+  {name:"יואל ברדוגו", month:10, day:15},
+  {name:"נירית ברוור", month:6, day:12},
+  {name:"דלית ברנע", month:6, day:27},
+  {name:"רווית ברקן", month:7, day:10},
+  {name:"נארמין גדבאו", month:4, day:7},
+  {name:"קלרה גודורוב", month:8, day:10},
+  {name:"מוטי גלשטיין", month:10, day:14},
+  {name:"נילי גפן", month:5, day:16},
+  {name:"אלה גרבשטיין", month:9, day:6},
+  {name:"שחר גרוסמן", month:12, day:23},
+  {name:"נסיה דהן", month:7, day:10},
+  {name:"ליאת דוידוביץ", month:11, day:3},
+  {name:"גולן דיין", month:2, day:21},
+  {name:"מוטי דקל", month:8, day:29},
+  {name:"עדי דר", month:12, day:12},
+  {name:"אלכס וולינסקי", month:5, day:2},
+  {name:"מני וייס", month:9, day:15},
+  {name:"עודד ולנסי", month:11, day:16},
+  {name:"אלינה וקסמן", month:7, day:19},
+  {name:"גפן ורדי", month:3, day:17},
+  {name:"אביאל זוהר", month:5, day:31},
+  {name:"שרון זוהר", month:7, day:20},
+  {name:"כריסטיאן חמיסה", month:2, day:15},
+  {name:"מרי חנאני", month:3, day:22},
+  {name:"מאיה חנניה", month:5, day:24},
+  {name:"ענת יגיל", month:11, day:19},
+  {name:"מירב יונני", month:1, day:4},
+  {name:"טיבי ייגר", month:7, day:5},
+  {name:"דקלה ירושלמי", month:7, day:4},
+  {name:"ליעד כהן", month:2, day:9},
+  {name:"אמיר כהן", month:7, day:1},
+  {name:"יאנה לדניוב", month:3, day:27},
+  {name:"שוש לוי", month:2, day:18},
+  {name:"תומר לופו", month:4, day:18},
+  {name:"רוני מאור לילה", month:5, day:25},
+  {name:"רותם מאיזליס", month:8, day:29},
+  {name:"רוני מגריל", month:11, day:7},
+  {name:"איריס מקמל", month:7, day:22},
+  {name:"נעם מרלי", month:2, day:24},
+  {name:"אלירן נחמה", month:7, day:22},
+  {name:"דניאל סוויד", month:12, day:20},
+  {name:"צחי סולומוביץ", month:3, day:1},
+  {name:"נירית סופר", month:4, day:10},
+  {name:"מור סורצ'קין", month:5, day:7},
+  {name:"לודמילה פאלוייקו", month:10, day:21},
+  {name:"גיל פוניאה", month:3, day:26},
+  {name:"מירב פלד", month:5, day:15},
+  {name:"אלירז פלק", month:10, day:25},
+  {name:"יובל פרץ", month:12, day:29},
+  {name:"ליאת צוריאל", month:6, day:28},
+  {name:"אולגה קובלנקו", month:5, day:11},
+  {name:"אודיה קוניג", month:5, day:2},
+  {name:"אוריין קוריאט", month:4, day:27},
+  {name:"תמר קושניר", month:3, day:26},
+  {name:"ענת קליין", month:9, day:14},
+  {name:"דניאל רוטנר", month:3, day:13},
+  {name:"אורטל ריינהרץ", month:5, day:26},
+  {name:"אפרת רייף בק", month:11, day:15},
+  {name:"ליבנת שיימן", month:5, day:11},
+  {name:"אלן שיין", month:11, day:18},
+  {name:"רימון שלוש", month:3, day:22},
+  {name:"יוסף שרביט", month:8, day:19}
+];
 // The arrays follow the left-to-right column order of the supplied PDF.
 const defaultRoster=[
 {day:'ראשון',b2:['שלוש רימון','לופו תומר','אבוטבול אור','ביליה איציק','ינקוביץ זוהר שרון','דוידוביץ ליאת','פלד מירב','סופר נירית','ארהרד רן','דאר עדי'],b4:['פאולייקו לודמילה','לופו תומר','קוריאט אוריאן','ריינהרץ אורטל','יגיל ענת','שיין אלן','כהן ליעד','גרוסמן שחר','צוריאל ליאת','רוטנר דניאל']},
@@ -103,6 +239,21 @@ function yearToHebrew(y){let n=y%1000;const vals=[[400,'ת'],[300,'ש'],[200,'ר
 function hebrewDateText(date){const parts=new Intl.DateTimeFormat('en-u-ca-hebrew-nu-latn',{day:'numeric',month:'long',year:'numeric'}).formatToParts(date);const day=Number(parts.find(p=>p.type==='day')?.value);const month=parts.find(p=>p.type==='month')?.value||'';const year=Number(parts.find(p=>p.type==='year')?.value);const months={'Tishri':'תשרי','Heshvan':'חשוון','Marcheshvan':'חשוון','Kislev':'כסלו','Tevet':'טבת','Shevat':'שבט','Adar':'אדר','Adar I':'אדר א׳','Adar II':'אדר ב׳','Nisan':'ניסן','Iyyar':'אייר','Sivan':'סיוון','Tamuz':'תמוז','Av':'אב','Elul':'אלול'};return `${numberToHebrew(day)} ב${months[month]||month} ${yearToHebrew(year)}`}
 function formatDates(){const now=new Date();document.getElementById('gregDate').textContent=new Intl.DateTimeFormat('he-IL',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);try{document.getElementById('hebDate').textContent=hebrewDateText(now)}catch(e){document.getElementById('hebDate').textContent='תאריך עברי'}document.getElementById('todayLabel').textContent='יום '+todayName()}
 function renderDuties(){const day=todayName();const item=state.roster.find(x=>x.day===day);const root=document.getElementById('dutyCards');if(!item){root.innerHTML='<div class="duty-card"><h3>אין תורנויות מתוכננות</h3><div class="names empty">יום ללא שיבוץ בלוח</div></div>';return}root.innerHTML=[{key:'b2',title:'הפסקה 2',time:'09:35–09:55',cls:''},{key:'b4',title:'הפסקה 4',time:'11:30–11:40',cls:'second'}].map(period=>`<section class="period-block ${period.cls}"><div class="period-heading"><h3>${period.title}</h3><span>${period.time}</span></div><div class="areas-grid">${areas.map((area,i)=>{const names=(item[period.key]||[])[i]||'';return `<article class="area-card"><h4>${escapeHtml(area)}</h4><div class="area-names ${names?'':'empty'}">${escapeHtml(names||'לא שובץ מורה')}</div></article>`}).join('')}</div></section>`).join('')}
+function israelMonthAndDay(){
+  const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Jerusalem',month:'numeric',day:'numeric'}).formatToParts(new Date());
+  return {month:Number(parts.find(part=>part.type==='month').value),day:Number(parts.find(part=>part.type==='day').value)};
+}
+function renderBirthdays(){
+  const root=document.getElementById('birthdaysContent');
+  if(!root)return;
+  const today=israelMonthAndDay();
+  const names=birthdays.filter(person=>person.month===today.month&&person.day===today.day).map(person=>person.name);
+  if(names.length){
+    root.innerHTML='<div class="birthday-confetti">🎈 🎉 🎂</div><div class="birthday-greeting">מזל טוב ליום ההולדת!</div><p class="birthday-subtitle">מאחלים לכם יום מלא בשמחה, בריאות והצלחות.</p><div class="birthday-names">'+names.map(name=>'<span class="birthday-name">'+escapeHtml(name)+'</span>').join('')+'</div>';
+  }else{
+    root.innerHTML='<div class="birthday-confetti">🎈 🎉 🎂</div><div class="birthday-empty">היום אין ימי הולדת בסגל</div><p class="birthday-subtitle">מאחלים לכולם יום שמח ומלא סיבות לחגוג!</p>';
+  }
+}
 function renderNotices(){const root=document.getElementById('announcements');root.innerHTML=state.notices.length?state.notices.map(n=>`<div class="notice">${escapeHtml(n.text)}</div>`).join(''):'<div class="notice">אין הודעות חשובות כרגע</div>';document.getElementById('updatedAt').textContent=state.ticker||'המסך מתעדכן אוטומטית'}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function renderEditors(){document.getElementById('rosterEditor').innerHTML=state.roster.map((r,i)=>`<div class="roster-row"><h4>${r.day}</h4>${[{key:'b2',title:'הפסקה 2, 09:35–09:55'},{key:'b4',title:'הפסקה 4, 11:30–11:40'}].map(period=>`<div style="margin-top:12px"><strong>${period.title}</strong><div class="roster-zone-grid" style="margin-top:8px">${areas.map((area,j)=>`<div class="zone-field"><label>${escapeHtml(area)}</label><input data-roster="${i}" data-period="${period.key}" data-area="${j}" value="${escapeHtml((r[period.key]||[])[j]||'')}" /></div>`).join('')}</div></div>`).join('')}</div>`).join('');
@@ -309,5 +460,5 @@ async function loadWeather() {
     footNode.textContent = 'בדקו חיבור לאינטרנט או את שם העיר במסך הניהול';
   }
 }
-formatDates();renderDuties();renderNotices();loadWeather();setInterval(()=>{formatDates();renderDuties()},60000);setInterval(loadWeather,30*60*1000);
+formatDates();renderDuties();renderNotices();renderBirthdays();loadWeather();setInterval(()=>{formatDates();renderDuties()},60000);setInterval(loadWeather,30*60*1000);
 </script></body></html>
