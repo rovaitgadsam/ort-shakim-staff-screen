@@ -348,6 +348,26 @@ const defaultRoster=[
 ];
 let state={roster:defaultRoster,notices:[{id:1,text:'ברוכים הבאים לחדר המורים אורט שחקים'}],city:'נהריה',ticker:''};
 try{const saved=localStorage.getItem('shakimStaffScreen');if(saved){const parsed=JSON.parse(saved);state={...state,...parsed};if(!Array.isArray(state.roster?.[0]?.b2)){state.roster=defaultRoster}}}catch(e){}
+
+// Keep the main display synchronized with Firestore. Without this listener,
+// approved QR notices are saved in the cloud but the public display stays stale.
+onSnapshot(siteDoc, snapshot => {
+  if (!snapshot.exists()) return;
+  const remote = snapshot.data() || {};
+  if (Array.isArray(remote.roster) && remote.roster.length) state.roster = remote.roster;
+  if (Array.isArray(remote.notices)) state.notices = remote.notices;
+  if (typeof remote.city === 'string' && remote.city.trim()) state.city = remote.city;
+  if (typeof remote.ticker === 'string') state.ticker = remote.ticker;
+  cloudHasData = true;
+  try { localStorage.setItem('shakimStaffScreen', JSON.stringify(state)); } catch (e) {}
+  renderDuties();
+  renderNotices();
+  loadWeather();
+}, error => {
+  console.error('Main dashboard Firestore listener failed', error);
+  setCloudStatus('לא ניתן לטעון את נתוני הלוח מ-Firebase: ' + (error?.message || error));
+});
+
 const weekdays=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 function todayName(){return weekdays[(new Date().getDay()+6)%7]}
 function punctuateHebrewNumber(s){return s.length===1?s+"׳":s.slice(0,-1)+"״"+s.slice(-1)}
