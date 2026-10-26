@@ -5,7 +5,7 @@
 <title>חדר המורים אורט שחקים</title>
 <link rel="stylesheet" href="./styles.css"></head>
 <body>
-<header><div class="brand"><div class="mark"><img src="https://media.base44.com/images/public/6a31afdc7dacbad40bdfb50f/02dad0857_.jpg" alt="לוגו בית הספר אורט שחקים"></div><div><h1>חדר המורים אורט שחקים</h1><p>עדכונים, תורנויות ומה שחשוב לדעת היום</p></div></div><div class="date"><div class="greg" id="gregDate">טוען תאריך…</div><div class="heb" id="hebDate">טוען תאריך עברי…</div></div></header>
+<header><div class="brand"><div class="mark"><img src="https://media.base44.com/images/public/6a31afdc7dacbad40bdfb50f/02dad0857_.jpg" alt="לוגו בית הספר אורט שחקים"></div><div><h1>חדר המורים אורט שחקים</h1><p>עדכונים, תורנויות ומה שחשוב לדעת היום</p></div></div><div class="screen-controls"><button class="fullscreen-btn" id="fullscreenBtn" type="button" aria-pressed="false" title="הצגת האתר במסך מלא">⛶ הצג במסך מלא</button><button class="admin-btn" id="openAdmin">⚙ מסך ניהול</button></div><div class="date"><div class="greg" id="gregDate">טוען תאריך…</div><div class="heb" id="hebDate">טוען תאריך עברי…</div></div></header>
 <main>
 <section class="panel"><h2><span class="icon">📍</span> תורנויות היום</h2><div class="today-label" id="todayLabel">תורנויות להיום</div><div id="dutyCards"></div></section>
 <div class="side">
@@ -16,8 +16,7 @@
 <section class="panel qr-panel"><h2><span class="icon qr-icon">✉️</span> הודעה ללוח</h2><a class="qr-link" href="submit.html" target="_blank" rel="noopener"><img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&amp;margin=1&amp;data=https%3A%2F%2Frovaitgadsam.github.io%2Fort-shakim-staff-screen%2Fsubmit.html" alt="קוד QR לפתיחת טופס שליחת הודעה"><span>סרקו לשליחת הודעה</span></a><p class="qr-hint">ההודעה תופיע לאחר אישור מנהל</p></section>
 </div>
 </div></main><footer><span class="footer-brand">אורט שחקים | חדר המורים</span><span id="updatedAt">המסך מתעדכן אוטומטית</span></footer>
-<button class="fullscreen-btn" id="fullscreenBtn" type="button" aria-pressed="false" title="הצגת האתר במסך מלא">⛶ הצג במסך מלא</button>
-<button class="admin-btn" id="openAdmin">⚙ מסך ניהול</button>
+
 <div id="admin"><div id="loginPanel" class="login-overlay" style="display:none">
 <section class="login-card"><div class="login-mark">אורט שחקים</div><h2>כניסת מנהל</h2><p>התחבר באמצעות חשבון הניהול המורשה כדי לערוך הודעות ותורנויות.</p>
 <div class="field"><label for="loginEmail">כתובת דוא"ל</label><input id="loginEmail" type="email" autocomplete="username" placeholder="name@example.com"></div>
