@@ -93,9 +93,7 @@ function showLoginError(message) {
   if (node) node.textContent = message;
 }
 
-const areas=[
-'תמר, קומה עליונה','תמר, קומת ביניים','תמר, קומת קרקע','דקל, קומה עליונה','חצר צפונית + מאחורי הקפיטריה','שחק, קומה עליונה','שחק, קומת קרקע','רחבת הדגל','בניין ורד, קומה עליונה','בניין ורד, קומת קרקע'
-];
+
 
 
 function renderEditors(){document.getElementById('rosterEditor').innerHTML=state.roster.map((r,i)=>`<div class="roster-row"><h4>${r.day}</h4>${[{key:'b2',title:'הפסקה 2, 09:35–09:55'},{key:'b4',title:'הפסקה 4, 11:30–11:40'}].map(period=>`<div style="margin-top:12px"><strong>${period.title}</strong><div class="roster-zone-grid" style="margin-top:8px">${areas.map((area,j)=>`<div class="zone-field"><label>${escapeHtml(area)}</label><input data-roster="${i}" data-period="${period.key}" data-area="${j}" value="${escapeHtml((r[period.key]||[])[j]||'')}" /></div>`).join('')}</div></div>`).join('')}</div>`).join('');
