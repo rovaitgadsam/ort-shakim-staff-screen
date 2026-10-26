@@ -68,7 +68,7 @@ const firebaseConfig = {
   messagingSenderId: "769440445481",
   appId: "1:769440445481:web:d6b228037574ac37355838"
 };
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig, "qrSubmission"); // Separate auth session from the staff admin dashboard
 const auth = getAuth(app);
 const db = getFirestore(app);
 const form = document.getElementById("messageForm");
