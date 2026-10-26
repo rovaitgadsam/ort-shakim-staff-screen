@@ -2,12 +2,30 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // The dashboard is publicly readable so the staff-room screen can show it.
-    // Only the configured administrator may create or update the shared dashboard.
+    // Publicly readable dashboard data. Only the configured administrator can edit it.
     match /siteData/main {
       allow read: if true;
       allow write: if request.auth != null
                    && request.auth.uid == "vNazaWZ5jKaZItnrlM0hRPGT2hd2";
+    }
+
+    // A signed-in anonymous visitor may submit a short message for moderation.
+    // Only the configured administrator can read or delete submissions.
+    match /messageSubmissions/{submissionId} {
+      allow create: if request.auth != null
+                    && request.auth.token.firebase.sign_in_provider == "anonymous"
+                    && request.resource.data.keys().hasOnly(["senderName", "text", "status", "createdAt"])
+                    && request.resource.data.keys().hasAll(["senderName", "text", "status", "createdAt"])
+                    && request.resource.data.senderName is string
+                    && request.resource.data.senderName.size() <= 40
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() > 0
+                    && request.resource.data.text.size() <= 280
+                    && request.resource.data.status == "pending"
+                    && request.resource.data.createdAt == request.time;
+      allow read, delete: if request.auth != null
+                          && request.auth.uid == "vNazaWZ5jKaZItnrlM0hRPGT2hd2";
+      allow update: if false;
     }
   }
 }
