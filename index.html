@@ -25,8 +25,15 @@ main{padding:24px 3vw;display:grid;grid-template-columns:minmax(0,1.55fr) minmax
 .birthday-name{background:#fff;border:1px solid #f0bfd5;border-radius:99px;padding:5px 10px;font-size:clamp(14px,1.05vw,18px);font-weight:800;color:#65354f}
 .birthday-confetti{font-size:19px;letter-spacing:3px;line-height:1.1}
 .birthday-empty{font-weight:800;color:#885174;font-size:clamp(15px,1.1vw,18px)}
-.qr-callout{display:flex;align-items:center;gap:8px;color:#34516b;text-decoration:none;font-weight:700;font-size:12px;white-space:nowrap}
-.qr-callout img{display:block;width:66px;height:66px;object-fit:contain;background:#fff;border:1px solid #dce7f0;border-radius:8px;padding:3px}
+.bottom-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;min-height:0;width:100%}
+.bottom-tiles>.panel{min-width:0;min-height:0;margin:0}
+.weather-panel,.qr-panel{display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.qr-panel{background:linear-gradient(145deg,#f0f8ff,#e8f7f5);align-items:center;text-align:center}
+.qr-panel h2{width:100%;justify-content:center}
+.qr-icon{background:#d8f0ec}
+.qr-link{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#1769aa;text-decoration:none;font-weight:800;font-size:clamp(12px,1vw,16px);min-width:0}
+.qr-link img{display:block;width:clamp(62px,7vw,96px);height:clamp(62px,7vw,96px);object-fit:contain;background:#fff;border:1px solid #dce7f0;border-radius:8px;padding:3px}
+.qr-hint{font-size:clamp(10px,.72vw,12px);color:var(--muted);line-height:1.2;margin:4px 0 0;text-align:center}
 .pending-messages{display:flex;flex-direction:column;gap:10px}
 .pending-message{border:1px solid #dce7f0;border-radius:10px;padding:12px;background:#f8fbfe}
 .pending-message p{white-space:pre-wrap;overflow-wrap:anywhere;margin:7px 0 10px;line-height:1.5}
@@ -58,13 +65,19 @@ main{padding:24px 3vw;display:grid;grid-template-columns:minmax(0,1.55fr) minmax
   .birthday-names{gap:4px;margin-top:1px}
   .birthday-name{font-size:clamp(11px,.78vw,13px);padding:3px 7px}
   .birthday-empty{font-size:clamp(12px,.85vw,15px)}
-  .side > .panel:last-child{min-height:0;overflow:hidden;padding:7px 12px}
-  .side > .panel:last-child h2{margin-bottom:3px}
-  .weather-row{gap:6px;align-items:center}
-  .weather-temp{font-size:clamp(27px,2.4vw,36px)}
-  .weather-detail{font-size:clamp(11px,.8vw,13px);line-height:1.25}
-  .weather-icon{font-size:29px}
-  .weather-foot{font-size:10px;line-height:1.2;margin-top:3px}
+  .bottom-tiles{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px;min-height:0;height:100%;max-height:clamp(150px,23vh,215px)}
+  .bottom-tiles>.panel{padding:7px 8px;border-radius:13px}
+  .bottom-tiles h2{font-size:clamp(13px,.95vw,17px);gap:4px;margin-bottom:4px;white-space:nowrap}
+  .bottom-tiles .icon{width:24px;height:24px;font-size:15px;border-radius:7px}
+  .weather-row{gap:4px;align-items:center;justify-content:center}
+  .weather-temp{font-size:clamp(23px,2vw,33px)}
+  .weather-detail{font-size:clamp(10px,.72vw,12px);line-height:1.2}
+  .weather-icon{font-size:25px}
+  .weather-foot{font-size:9px;line-height:1.15;margin-top:3px;text-align:center}
+  .qr-panel h2{justify-content:center}
+  .qr-link{font-size:clamp(10px,.72vw,12px);gap:3px}
+  .qr-link img{width:clamp(52px,5.7vw,76px);height:clamp(52px,5.7vw,76px);padding:2px}
+  .qr-hint{font-size:9px;margin-top:2px}
   .period-block{margin-top:8px}
   .period-heading{margin:8px 0 6px;padding-bottom:5px}
   .period-heading h3{font-size:clamp(17px,1.25vw,21px)}
@@ -91,8 +104,8 @@ footer{display:flex;justify-content:space-between;padding:0 3vw 20px;color:#8a9a
 .admin-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.admin-top h2{margin:0;font-size:30px}.actions{display:flex;gap:8px;flex-wrap:wrap}button{cursor:pointer}.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:700;font-size:15px}.primary{background:var(--blue);color:white}.light{background:white;color:var(--ink);border:1px solid #d3dfeb}.danger{background:#fee2e2;color:#991b1b}
 .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}.admin-panel{background:white;border:1px solid #dbe5ee;border-radius:16px;padding:18px}.admin-panel h3{margin:0 0 15px;font-size:21px}.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.field label{font-weight:700;font-size:14px}.field input,.field textarea,.field select{font:inherit;border:1px solid #cbd8e5;border-radius:9px;padding:10px;background:#fff;color:var(--ink);width:100%}.field textarea{min-height:100px;resize:vertical}.roster-row{border:1px solid #e0e8ef;border-radius:12px;padding:12px;margin-bottom:10px}.roster-row h4{margin:0 0 10px}.roster-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hint{color:var(--muted);font-size:13px;line-height:1.5}.status{font-size:14px;color:#087f70;margin-top:10px}
 @media(max-width:1100px){.areas-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.area-names{font-size:16px}}
-@media(max-width:850px){main{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.admin-grid{grid-template-columns:1fr}.date{min-width:0}.areas-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:560px){header{align-items:flex-start;flex-direction:column}.date{text-align:right}.side{display:flex}.areas-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#admin{padding:12px}.roster-fields{grid-template-columns:1fr}.roster-zone-grid{grid-template-columns:1fr}}
+@media(max-width:850px){main{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr;gap:12px}.side>.panel:first-child,.birthday-panel,.bottom-tiles{grid-column:1/-1}.bottom-tiles{grid-template-columns:1fr 1fr;max-height:none}.bottom-tiles>.panel{padding:14px}.qr-link img{width:84px;height:84px}.admin-grid{grid-template-columns:1fr}.date{min-width:0}.areas-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:560px){header{align-items:flex-start;flex-direction:column}.date{text-align:right}.side{display:flex}.bottom-tiles{grid-template-columns:1fr 1fr}.bottom-tiles>.panel{padding:10px 8px}.qr-link img{width:70px;height:70px}.areas-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#admin{padding:12px}.roster-fields{grid-template-columns:1fr}.roster-zone-grid{grid-template-columns:1fr}}
 @media(min-width:1500px){main{padding-top:30px;gap:26px}.panel{padding:28px}.area-card{padding:13px 11px}.area-names{font-size:18px}}
 </style></head>
 <body>
@@ -102,8 +115,11 @@ footer{display:flex;justify-content:space-between;padding:0 3vw 20px;color:#8a9a
 <div class="side">
 <section class="panel"><h2><span class="icon">📣</span> הודעות חשובות</h2><div id="announcements" class="announcements"></div></section>
 <section class="panel birthday-panel"><h2><span class="icon birthday-icon">🎉</span> ימי הולדת בסגל</h2><div id="birthdaysContent" class="birthday-content"></div></section>
-<section class="panel"><h2><span class="icon">🌤️</span> מזג האוויר</h2><div class="weather-row"><div><div class="weather-temp" id="temp">--°</div><div class="weather-detail" id="weatherDetail">מעדכן תחזית…</div></div><div class="weather-icon" id="weatherIcon">🌤️</div></div><div class="weather-foot" id="weatherFoot">תחזית לנהריה, מתעדכנת אוטומטית כשיש חיבור לאינטרנט</div></section>
-</div></main><footer><span class="footer-brand">אורט שחקים | חדר המורים</span><a class="qr-callout" href="submit.html" target="_blank" rel="noopener"><img src="https://api.qrserver.com/v1/create-qr-code/?size=128x128&margin=1&data=https%3A%2F%2Frovaitgadsam.github.io%2Fort-shakim-staff-screen%2Fsubmit.html" alt="קוד QR לשליחת הודעה ללוח"><span>סרקו לשליחת הודעה ללוח</span></a><span id="updatedAt">המסך מתעדכן אוטומטית</span></footer>
+<div class="bottom-tiles">
+<section class="panel weather-panel"><h2><span class="icon">🌤️</span> מזג האוויר</h2><div class="weather-row"><div><div class="weather-temp" id="temp">--°</div><div class="weather-detail" id="weatherDetail">מעדכן תחזית…</div></div><div class="weather-icon" id="weatherIcon">🌤️</div></div><div class="weather-foot" id="weatherFoot">תחזית לנהריה, מתעדכנת אוטומטית כשיש חיבור לאינטרנט</div></section>
+<section class="panel qr-panel"><h2><span class="icon qr-icon">✉️</span> הודעה ללוח</h2><a class="qr-link" href="submit.html" target="_blank" rel="noopener"><img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&amp;margin=1&amp;data=https%3A%2F%2Frovaitgadsam.github.io%2Fort-shakim-staff-screen%2Fsubmit.html" alt="קוד QR לפתיחת טופס שליחת הודעה"><span>סרקו לשליחת הודעה</span></a><p class="qr-hint">ההודעה תופיע לאחר אישור מנהל</p></section>
+</div>
+</div></main><footer><span class="footer-brand">אורט שחקים | חדר המורים</span><span id="updatedAt">המסך מתעדכן אוטומטית</span></footer>
 <button class="admin-btn" id="openAdmin">⚙ מסך ניהול</button>
 <div id="admin"><div id="loginPanel" class="login-overlay" style="display:none">
 <section class="login-card"><div class="login-mark">אורט שחקים</div><h2>כניסת מנהל</h2><p>התחבר באמצעות חשבון הניהול המורשה כדי לערוך הודעות ותורנויות.</p>
