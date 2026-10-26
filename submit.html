@@ -5,31 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#123653">
 <title>שליחת הודעה ללוח חדר המורים | אורט שחקים</title>
-<style>
-:root{--navy:#123653;--blue:#1769aa;--teal:#0d9488;--paper:#f3f7fb;--ink:#172b4d;--muted:#63758a}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:linear-gradient(145deg,#eef5fb,#f8fafc);color:var(--ink);font-family:Arial,"Noto Sans Hebrew",sans-serif;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{width:min(100%,560px);background:#fff;border:1px solid #dbe5ee;border-radius:24px;box-shadow:0 18px 60px #102a4318;overflow:hidden}
-.header{background:linear-gradient(120deg,#102a43,#145b85);color:#fff;padding:24px}
-.header .school{font-size:13px;color:#d4e7f5;font-weight:700;margin-bottom:8px}
-h1{font-size:clamp(26px,6vw,34px);margin:0 0 8px}
-.header p{margin:0;color:#dcecf7;line-height:1.5}
-form{padding:24px}
-label{display:block;font-weight:700;margin-bottom:8px}
-.field{margin-bottom:18px}
-input,textarea{font:inherit;color:var(--ink);width:100%;border:1px solid #cbd8e5;border-radius:12px;padding:13px;background:#fff}
-input:focus,textarea:focus{outline:3px solid #1769aa22;border-color:var(--blue)}
-textarea{min-height:150px;resize:vertical}
-.counter{font-size:12px;color:var(--muted);text-align:left;margin-top:5px}
-.hint{font-size:13px;color:var(--muted);line-height:1.55;margin:8px 0 0}
-button{font:inherit;border:0;border-radius:12px;background:var(--blue);color:#fff;padding:14px 18px;font-weight:800;width:100%;cursor:pointer}
-button:disabled{opacity:.6;cursor:wait}
-.status{display:none;margin:0 24px 24px;border-radius:12px;padding:14px;line-height:1.5}
-.status.success{display:block;background:#e7f8f2;color:#096950}
-.status.error{display:block;background:#fff0f0;color:#9f2525}
-.footer{padding:0 24px 22px;text-align:center;color:var(--muted);font-size:12px}
-.honeypot{position:absolute;right:-10000px;width:1px;height:1px;overflow:hidden}
-</style>
+<link rel="stylesheet" href="./submit.css">
 </head>
 <body>
 <main class="card">
@@ -55,80 +31,6 @@ button:disabled{opacity:.6;cursor:wait}
 <div id="status" class="status" role="status" aria-live="polite"></div>
 <div class="footer">הודעה שנשלחה אינה מופיעה מיד, היא תוצג לאחר אישור מנהל.</div>
 </main>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDUvAC0UJHPoGQ9osyrV8nDGxjl2wjHHgs",
-  authDomain: "ort-shakim-staff.firebaseapp.com",
-  projectId: "ort-shakim-staff",
-  storageBucket: "ort-shakim-staff.firebasestorage.app",
-  messagingSenderId: "769440445481",
-  appId: "1:769440445481:web:d6b228037574ac37355838"
-};
-const app = initializeApp(firebaseConfig, "qrSubmission"); // Separate auth session from the staff admin dashboard
-const auth = getAuth(app);
-const db = getFirestore(app);
-const form = document.getElementById("messageForm");
-const textInput = document.getElementById("messageText");
-const counter = document.getElementById("counter");
-const statusBox = document.getElementById("status");
-const submitButton = document.getElementById("submitButton");
-
-textInput.addEventListener("input", () => counter.textContent = String(textInput.value.length));
-
-function showStatus(message, kind) {
-  statusBox.textContent = message;
-  statusBox.className = "status " + kind;
-}
-form.addEventListener("submit", async event => {
-  event.preventDefault();
-  if (document.getElementById("website").value.trim()) return;
-  const text = textInput.value.trim();
-  const senderName = document.getElementById("senderName").value.trim();
-  if (!text) {
-    showStatus("יש לכתוב הודעה לפני השליחה.", "error");
-    return;
-  }
-  if (text.length > 280 || senderName.length > 40) {
-    showStatus("ההודעה או השם ארוכים מדי.", "error");
-    return;
-  }
-  submitButton.disabled = true;
-  submitButton.textContent = "שולח...";
-  statusBox.className = "status";
-  try {
-    if (!auth.currentUser) await signInAnonymously(auth);
-    await addDoc(collection(db, "messageSubmissions"), {
-      senderName: senderName || "ללא שם",
-      text,
-      status: "pending",
-      createdAt: serverTimestamp()
-    });
-    form.reset();
-    counter.textContent = "0";
-    textInput.disabled = true;
-    document.getElementById("senderName").disabled = true;
-    submitButton.disabled = true;
-    showStatus("ההודעה נשלחה בהצלחה למנהל לבדיקה. אם תאושר, היא תופיע בלוח חדר המורים.", "success");
-    submitButton.textContent = "ההודעה נשלחה";
-  } catch (error) {
-    console.error("Message submission failed", error);
-    let message = "לא ניתן לשלוח כרגע. נסו שוב מאוחר יותר.";
-    if (error?.code === "auth/operation-not-allowed") {
-      message = "השליחה עדיין לא הופעלה בפרויקט. יש להפעיל Anonymous sign-in ב-Firebase Authentication.";
-    } else if (error?.code === "permission-denied") {
-      message = "Firebase דחה את ההודעה בגלל הרשאות. פרסם מחדש את firestore.rules ממאגר GitHub במסוף Firestore → Rules, וודא ש-Anonymous מופעל ב-Authentication.";
-    } else if (error?.code === "auth/unauthorized-domain") {
-      message = "הדומיין של האתר אינו מאושר ב-Firebase Authentication.";
-    }
-    showStatus(message, "error");
-    submitButton.disabled = false;
-    submitButton.textContent = "שליחת הודעה לאישור";
-  }
-});
-</script>
+<script type="module" src="./js/submit.js"></script>
 </body>
 </html>
