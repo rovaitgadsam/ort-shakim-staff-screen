@@ -1,11 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+import { getFirestore, doc, updateDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
 import { firebaseConfig } from "./firebase-config.js";
 const app = initializeApp(firebaseConfig, "qrSubmission"); // Separate auth session from the staff admin dashboard
 const auth = getAuth(app);
 const db = getFirestore(app);
+const siteDoc = doc(db, "siteData", "main");
 const form = document.getElementById("messageForm");
 const textInput = document.getElementById("messageText");
 const counter = document.getElementById("counter");
@@ -36,18 +37,18 @@ form.addEventListener("submit", async event => {
   statusBox.className = "status";
   try {
     if (!auth.currentUser) await signInAnonymously(auth);
-    await addDoc(collection(db, "messageSubmissions"), {
-      senderName: senderName || "ללא שם",
-      text,
-      status: "pending",
-      createdAt: serverTimestamp()
+    const displayText = senderName ? senderName + ": " + text : text;
+    const noticeId = "qr-" + Date.now() + "-" + Math.random().toString(36).slice(2, 10);
+    await updateDoc(siteDoc, {
+      notices: arrayUnion({ id: noticeId, text: displayText }),
+      updatedAt: serverTimestamp()
     });
     form.reset();
     counter.textContent = "0";
     textInput.disabled = true;
     document.getElementById("senderName").disabled = true;
     submitButton.disabled = true;
-    showStatus("ההודעה נשלחה בהצלחה למנהל לבדיקה. אם תאושר, היא תופיע בלוח חדר המורים.", "success");
+    showStatus("ההודעה פורסמה מיד בלוח חדר המורים.", "success");
     submitButton.textContent = "ההודעה נשלחה";
   } catch (error) {
     console.error("Message submission failed", error);
@@ -61,6 +62,6 @@ form.addEventListener("submit", async event => {
     }
     showStatus(message, "error");
     submitButton.disabled = false;
-    submitButton.textContent = "שליחת הודעה לאישור";
+    submitButton.textContent = "שליחת הודעה ללוח";
   }
 });
