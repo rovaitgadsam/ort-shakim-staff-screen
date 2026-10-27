@@ -1,0 +1,16 @@
+{
+  "name": "ort-shakim-staff-notifications",
+  "private": true,
+  "description": "Telegram alerts when new QR messages arrive for the staff bulletin board.",
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "scripts": {
+    "lint": "node --check index.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.2",
+    "firebase-functions": "^6.3.2"
+  }
+}
