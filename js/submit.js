@@ -56,7 +56,7 @@ form.addEventListener("submit", async event => {
     if (error?.code === "auth/operation-not-allowed") {
       message = "השליחה עדיין לא הופעלה בפרויקט. יש להפעיל Anonymous sign-in ב-Firebase Authentication.";
     } else if (error?.code === "permission-denied") {
-      message = "Firebase דחה את ההודעה בגלל הרשאות. פרסם מחדש את firestore.rules ממאגר GitHub במסוף Firestore → Rules, וודא ש-Anonymous מופעל ב-Authentication.";
+      message = "Firebase דחה את הפרסום. יש לפרסם את כללי firestore.rules המעודכנים במסוף Firebase → Firestore Database → Rules, ולוודא ש-Anonymous מופעל ב-Authentication.";
     } else if (error?.code === "auth/unauthorized-domain") {
       message = "הדומיין של האתר אינו מאושר ב-Firebase Authentication.";
     }
