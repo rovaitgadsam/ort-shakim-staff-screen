@@ -2,18 +2,52 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Publicly readable dashboard. Only the configured administrator can edit it.
-    match /siteData/main {
-      allow read: if true;
-      allow write: if request.auth != null
-                   && request.auth.uid == "vNazaWZ5jKaZItnrlM0hRPGT2hd2";
+    function isAdmin() {
+      return request.auth != null
+             && request.auth.uid == "vNazaWZ5jKaZItnrlM0hRPGT2hd2";
     }
 
-    // Public QR form: anonymous users may create a short pending message only.
-    // Only the configured administrator may read/delete submissions.
+    function isAnonymousUser() {
+      return request.auth != null
+             && request.auth.token.firebase.sign_in_provider == "anonymous";
+    }
+
+    function isValidQrNotice(notice) {
+      return notice is map
+             && notice.keys().hasOnly(["id", "text"])
+             && notice.keys().hasAll(["id", "text"])
+             && notice.id is string
+             && notice.id.size() > 0
+             && notice.id.size() <= 80
+             && notice.text is string
+             && notice.text.size() > 0
+             && notice.text.size() <= 340;
+    }
+
+    // Publicly readable dashboard. Only the configured administrator can
+    // make general changes. Anonymous QR users may append exactly one
+    // validated notice without changing duties or other dashboard fields.
+    match /siteData/main {
+      allow read: if true;
+      allow write: if isAdmin();
+
+      allow update: if isAnonymousUser()
+                    && request.resource.data.diff(resource.data).affectedKeys()
+                       .hasOnly(["notices", "updatedAt"])
+                    && request.resource.data.updatedAt == request.time
+                    && resource.data.notices is list
+                    && request.resource.data.notices is list
+                    && request.resource.data.notices.size() == resource.data.notices.size() + 1
+                    && request.resource.data.notices.hasAll(resource.data.notices)
+                    && isValidQrNotice(
+                         request.resource.data.notices[resource.data.notices.size()]
+                       );
+    }
+
+    // Public QR submission queue retained for older pending messages.
+    // New QR form submissions now append directly to the public board.
     match /messageSubmissions/{submissionId} {
-      allow create: if request.auth != null
-                    && request.auth.token.firebase.sign_in_provider == "anonymous"
+      allow create: if isAnonymousUser()
                     && request.resource.data.keys().hasOnly(["senderName", "text", "status", "createdAt"])
                     && request.resource.data.keys().hasAll(["senderName", "text", "status", "createdAt"])
                     && request.resource.data.senderName is string
@@ -23,8 +57,7 @@ service cloud.firestore {
                     && request.resource.data.text.size() <= 280
                     && request.resource.data.status == "pending"
                     && request.resource.data.createdAt is timestamp;
-      allow read, delete: if request.auth != null
-                          && request.auth.uid == "vNazaWZ5jKaZItnrlM0hRPGT2hd2";
+      allow read, delete: if isAdmin();
       allow update: if false;
     }
   }
