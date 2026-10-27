@@ -21,3 +21,91 @@ button:disabled{opacity:.6;cursor:wait}
 .status.error{display:block;background:#fff0f0;color:#9f2525}
 .footer{padding:0 24px 22px;text-align:center;color:var(--muted);font-size:12px}
 .honeypot{position:absolute;right:-10000px;width:1px;height:1px;overflow:hidden}
+
+
+/* ORT Shakim visual refresh — QR submission page. */
+:root{
+  --navy:#123653;
+  --blue:#287A9B;
+  --teal:#4C9D96;
+  --gold:#E8B84B;
+  --paper:#F5F4EF;
+  --ink:#193447;
+  --muted:#657985;
+  --line:#E2E7E9;
+}
+html{background:var(--paper)}
+body{
+  position:relative;
+  isolation:isolate;
+  background-color:var(--paper);
+  background-image:
+    radial-gradient(circle at 8% 8%,rgba(40,122,155,.09) 0 2px,transparent 2.8px),
+    radial-gradient(circle at 94% 88%,rgba(76,157,150,.08) 0 3px,transparent 3.8px),
+    linear-gradient(135deg,transparent 0 70%,rgba(18,54,83,.03) 70.2% 70.6%,transparent 70.8%);
+  background-size:28px 28px,34px 34px,100% 100%;
+  color:var(--ink);
+}
+.card{
+  border-color:#DEE6E7;
+  border-radius:24px;
+  box-shadow:0 20px 54px rgba(18,54,83,.12);
+}
+.header{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  background:linear-gradient(118deg,#123653 0%,#174C6C 64%,#205F7C 100%);
+  padding:28px;
+}
+.header::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  opacity:.55;
+  background:
+    radial-gradient(circle at 92% 10%,transparent 0 26px,rgba(216,236,243,.48) 27px 28px,transparent 29px 43px,rgba(216,236,243,.28) 44px 45px,transparent 46px),
+    linear-gradient(135deg,transparent 0 70%,rgba(76,157,150,.22) 70.2% 70.6%,transparent 70.8%);
+}
+.header .school{color:#D8E9F2;letter-spacing:.02em}
+h1{letter-spacing:-.035em}
+.header p{color:#E2EDF3}
+input,textarea{
+  border-color:#CCDADD;
+  border-radius:12px;
+  transition:border-color .16s ease,box-shadow .16s ease;
+}
+input:focus,textarea:focus{
+  outline:3px solid rgba(40,122,155,.14);
+  border-color:var(--blue);
+}
+button{
+  background:var(--blue);
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(40,122,155,.18);
+  transition:background-color .16s ease,box-shadow .16s ease,transform .16s ease;
+}
+button:hover:not(:disabled){
+  background:#226986;
+  box-shadow:0 6px 16px rgba(40,122,155,.2);
+  transform:translateY(-1px);
+}
+button:focus-visible{
+  outline:3px solid rgba(40,122,155,.35);
+  outline-offset:3px;
+}
+button:disabled{box-shadow:none}
+.status.success{background:#E7F3F1;color:#236E68}
+.status.error{background:#FCEBEC;color:#963D49}
+.footer{color:#72858E}
+.hint{color:#657985}
+@media(max-width:560px){
+  .header{padding:23px}
+  form{padding:22px}
+  .card{border-radius:19px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important}
+}
