@@ -2,7 +2,7 @@ import { onSnapshot } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-f
 import { auth, db, siteDoc } from "./firebase.js";
 import { ADMIN_UID } from "./firebase-config.js";
 import { initAdmin } from "./admin.js";
-import { renderBirthdays } from "./birthdays.js";
+import { renderBirthdays, formatStaffName } from "./birthdays.js";
 import { createWeatherLoader } from "./weather.js";
 
 const areas=[
@@ -27,8 +27,14 @@ function numberToHebrew(n){if(n===15)return 'ט״ו';if(n===16)return 'ט״ז';c
 function yearToHebrew(y){let n=y%1000;const vals=[[400,'ת'],[300,'ש'],[200,'ר'],[100,'ק'],[90,'צ'],[80,'פ'],[70,'ע'],[60,'ס'],[50,'נ'],[40,'מ'],[30,'ל'],[20,'כ'],[10,'י'],[9,'ט'],[8,'ח'],[7,'ז'],[6,'ו'],[5,'ה'],[4,'ד'],[3,'ג'],[2,'ב'],[1,'א']];let s='';for(const [v,l] of vals){while(n>=v){s+=l;n-=v}}return punctuateHebrewNumber(s)}
 function hebrewDateText(date){const parts=new Intl.DateTimeFormat('en-u-ca-hebrew-nu-latn',{day:'numeric',month:'long',year:'numeric'}).formatToParts(date);const day=Number(parts.find(p=>p.type==='day')?.value);const month=parts.find(p=>p.type==='month')?.value||'';const year=Number(parts.find(p=>p.type==='year')?.value);const months={'Tishri':'תשרי','Heshvan':'חשוון','Marcheshvan':'חשוון','Kislev':'כסלו','Tevet':'טבת','Shevat':'שבט','Adar':'אדר','Adar I':'אדר א׳','Adar II':'אדר ב׳','Nisan':'ניסן','Iyyar':'אייר','Sivan':'סיוון','Tamuz':'תמוז','Av':'אב','Elul':'אלול'};return `${numberToHebrew(day)} ב${months[month]||month} ${yearToHebrew(year)}`}
 function formatDates(){const now=new Date();document.getElementById('gregDate').textContent=new Intl.DateTimeFormat('he-IL',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);try{document.getElementById('hebDate').textContent=hebrewDateText(now)}catch(e){document.getElementById('hebDate').textContent='תאריך עברי'}document.getElementById('todayLabel').textContent='יום '+todayName()}
-function renderDuties(){const day=todayName();const item=state.roster.find(x=>x.day===day);const root=document.getElementById('dutyCards');if(!item){root.innerHTML='<div class="duty-card"><h3>אין תורנויות מתוכננות</h3><div class="names empty">יום ללא שיבוץ בלוח</div></div>';return}root.innerHTML=[{key:'b2',title:'הפסקה 2',time:'09:35–09:55',cls:''},{key:'b4',title:'הפסקה 4',time:'11:30–11:40',cls:'second'}].map(period=>`<section class="period-block ${period.cls}"><div class="period-heading"><h3>${period.title}</h3><span>${period.time}</span></div><div class="areas-grid">${areas.map((area,i)=>{const names=(item[period.key]||[])[i]||'';return `<article class="area-card"><h4>${escapeHtml(area)}</h4><div class="area-names ${names?'':'empty'}">${escapeHtml(names||'לא שובץ מורה')}</div></article>`}).join('')}</div></section>`).join('')}
-function renderNotices(){const root=document.getElementById('announcements');root.innerHTML=state.notices.length?state.notices.map(n=>`<div class="notice">${escapeHtml(n.text)}</div>`).join(''):'<div class="notice">אין הודעות בלוח כרגע</div>';document.getElementById('updatedAt').textContent=state.ticker||'המסך מתעדכן אוטומטית'}
+function renderDuties(){const day=todayName();const item=state.roster.find(x=>x.day===day);const root=document.getElementById('dutyCards');if(!item){root.innerHTML='<div class="duty-card"><h3>אין תורנויות מתוכננות</h3><div class="names empty">יום ללא שיבוץ בלוח</div></div>';return}root.innerHTML=[{key:'b2',title:'הפסקה 2',time:'09:35–09:55',cls:''},{key:'b4',title:'הפסקה 4',time:'11:30–11:40',cls:'second'}].map(period=>`<section class="period-block ${period.cls}"><div class="period-heading"><h3>${period.title}</h3><span>${period.time}</span></div><div class="areas-grid">${areas.map((area,i)=>{const names=(item[period.key]||[])[i]||'';return `<article class="area-card"><h4>${escapeHtml(area)}</h4><div class="area-names ${names?'':'empty'}">${escapeHtml(formatStaffName(names||'לא שובץ מורה'))}</div></article>`}).join('')}</div></section>`).join('')}
+function renderNotices(){const root=document.getElementById('announcements');root.innerHTML=state.notices.length?state.notices.map(n=>`<div class="notice">${escapeHtml(formatNoticeText(n.text))}</div>`).join(''):'<div class="notice">אין הודעות בלוח כרגע</div>';document.getElementById('updatedAt').textContent=state.ticker||'המסך מתעדכן אוטומטית'}
+function formatNoticeText(value){
+  const text=String(value??"");
+  const match=text.match(/^([^:\n]{2,60}:)(\s*)/);
+  if(!match)return text;
+  return formatStaffName(match[1].slice(0,-1))+":"+match[2]+text.slice(match[0].length);
+}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
 const loadWeather = createWeatherLoader({ getCity: () => state.city, escapeHtml });
