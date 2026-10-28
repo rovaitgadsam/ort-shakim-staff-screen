@@ -3,6 +3,7 @@ import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/1
 import { getFirestore, doc, updateDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
 import { firebaseConfig } from "./firebase-config.js";
+import { formatStaffName } from "./birthdays.js";
 const app = initializeApp(firebaseConfig, "qrSubmission"); // Separate auth session from the staff admin dashboard
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -37,7 +38,7 @@ form.addEventListener("submit", async event => {
   statusBox.className = "status";
   try {
     if (!auth.currentUser) await signInAnonymously(auth);
-    const displayText = senderName ? senderName + ": " + text : text;
+    const displayText = senderName ? formatStaffName(senderName) + ": " + text : text;
     const noticeId = "qr-" + Date.now() + "-" + Math.random().toString(36).slice(2, 10);
     await updateDoc(siteDoc, {
       notices: arrayUnion({ id: noticeId, text: displayText }),
