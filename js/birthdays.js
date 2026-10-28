@@ -121,6 +121,60 @@ const birthdays = [
   {name:"אדית מיקנר", month:9, day:11}
 ];
 
+
+// Staff names are displayed with given name first and family name last.
+function normalizedName(value) {
+  return String(value ?? "").trim().replace(/\s+/g, " ");
+}
+function nameTokenKey(value) {
+  return normalizedName(value).split(" ").filter(Boolean).sort().join(" ");
+}
+const canonicalNamesByTokens = new Map();
+for (const person of birthdays) {
+  const key = nameTokenKey(person.name);
+  if (canonicalNamesByTokens.has(key) && canonicalNamesByTokens.get(key) !== person.name) {
+    canonicalNamesByTokens.set(key, null);
+  } else {
+    canonicalNamesByTokens.set(key, person.name);
+  }
+}
+const explicitNameOrder = new Map([
+  ["ביליה איציק", "איציק ביליה"],
+  ["ינקוביץ זוהר שרון", "זוהר שרון ינקוביץ"],
+  ["דאר עדי", "עדי דאר"],
+  ["פאולייקו לודמילה", "לודמילה פאולייקו"],
+  ["קוריאט אוריאן", "אוריאן קוריאט"],
+  ["שרביט יוסי", "יוסי שרביט"],
+  ["מאיזלס רותם", "רותם מאיזלס"],
+  ["אלינה קסמן", "אלינה קסמן"],
+  ["ברקן רוית", "רוית ברקן"],
+  ["מרלי נועם", "נועם מרלי"],
+  ["שיינמן לבנת", "לבנת שיינמן"],
+  ["לדנוב יאנה", "יאנה לדנוב"],
+  ["אלרגבלי דורון", "דורון אלרגבלי"],
+  ["נחמה אלירז", "אלירז נחמה"],
+  ["כהן אמיר ליעד", "אמיר כהן, ליעד כהן"],
+  ["תמר", "תמר קושניר"],
+  ["אלירז", "אלירז נחמה"],
+  ["איריס", "איריס מקמל"],
+  ["איציק", "איציק ביליה"]
+].map(([from, to]) => [normalizedName(from), to]));
+
+function formatOneStaffName(value) {
+  const name = normalizedName(value);
+  if (!name) return "";
+  const explicit = explicitNameOrder.get(name);
+  if (explicit) return explicit;
+  const canonical = canonicalNamesByTokens.get(nameTokenKey(name));
+  return canonical || name;
+}
+
+export function formatStaffName(value) {
+  const full = normalizedName(value);
+  if (!full) return "";
+  return full.split(/\s*,\s*/).map(formatOneStaffName).join(", ");
+}
+
 function israelMonthAndDay(){
   const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Jerusalem',month:'numeric',day:'numeric'}).formatToParts(new Date());
   return {month:Number(parts.find(part=>part.type==='month').value),day:Number(parts.find(part=>part.type==='day').value)};
