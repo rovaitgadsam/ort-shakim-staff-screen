@@ -1,4 +1,5 @@
-import { onSnapshot } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+import { onSnapshot, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
 import { auth, db, siteDoc } from "./firebase.js";
 import { ADMIN_UID } from "./firebase-config.js";
 import { initAdmin } from "./admin.js";
@@ -6,19 +7,121 @@ import { renderBirthdays, formatStaffName } from "./birthdays.js";
 import { createWeatherLoader } from "./weather.js";
 
 const areas=[
-'תמר, קומה עליונה','תמר, קומת ביניים','תמר, קומת קרקע','דקל, קומה עליונה','חצר צפונית + מאחורי הקפיטריה','שחק, קומה עליונה','שחק, קומת קרקע','רחבת הדגל','בניין ורד, קומה עליונה','בניין ורד, קומת קרקע'
+'תמר, קומה עליונה','תמר, קומת ביניים','תמר, קומת קרקע','דקל, קומה עליונה','חצר צפונית + מבואת דקל','שחק, קומה עליונה','שחק, קומת קרקע','רחבת הדגל','בניין ורד, קומה עליונה','בניין ורד, קומת קרקע'
 ];
 
 // The arrays follow the left-to-right column order of the supplied PDF.
 const defaultRoster=[
-{day:'ראשון',b2:['שלוש רימון','לופו תומר','אבוטבול אור','ביליה איציק','ינקוביץ זוהר שרון','דוידוביץ ליאת','פלד מירב','סופר נירית','ארהרד רן','דאר עדי'],b4:['פאולייקו לודמילה','לופו תומר','קוריאט אוריאן','ריינהרץ אורטל','יגיל ענת','שיין אלן','כהן ליעד','גרוסמן שחר','צוריאל ליאת','רוטנר דניאל']},
-{day:'שני',b2:['כהן אמיר','שרביט יוסי','רייף בק אפרת','כהן ליעד','מרי חנאני','מאיזלס רותם','בן עזרא ערן','פוניאה גיל','גלשטיין מוטי','אלינה קסמן'],b4:['בכר גלי','דהן נסיה','ורדי גפן','דיין גולן','לוי שוש','יונני מירב','אלירן נחמה','בן יאיר דנה','אמנוני שי','וייס מני']},
-{day:'שלישי',b2:['ירושלמי דקלה','אביאל זוהר','גפן נילי','ברקן רוית','סוויד דניאל','אוסיפוב אורה','דקל מוטי, בר קרן','צוריאל ליאת','ברנע דלית',''],b4:['דהן נסיה','סופר נירית','ביליה איציק','ריינהרץ אורטל','בר טל','מרלי נועם','שיינמן לבנת','חנניה מאיה','מקמל איריס','מאיזלס רותם']},
-{day:'רביעי',b2:['ורדי גפן','אזולאי רעיה','שיינמן לבנת','ארהרד רן','לדנוב יאנה','יונני מירב','אלרגבלי דורון','שלוש רימון','בן טל איתי','נחמה אלירז'],b4:['ירושלמי דקלה','חנאני מרי','זוהר אביאל','דאר עדי','דוידוביץ ליאת','כהן אמיר ליעד','אוסיפוב אורה','פוניאה גיל','קושניר תמר','']},
-{day:'חמישי',b2:['שיין אלן','אבוטבול אור','חנניה מאיה','בר טל','פאולייקו לודמילה','תמר','אלירז','איריס','איציק','וייס מני'],b4:['גרוסמן שחר','דיין גולן','בר לב אביב','ברנע דלית','קרן בר','סוויד דניאל','בן עזרא ערן','רייף בק אפרת','בוכריס יגאל','בן יאיר דנה']}
+{day:'ראשון',b2:['רימון שלוש','תומר לופו','אור אבוטבול','איציק ביליה','זוהר שרון ינקוביץ','ליאת דוידוביץ','מירב פלד','נירית סופר','רן ארהרד','עדי דאר'],b4:['לודמילה פאולייקו','תומר לופו','אוריאן קוריאט','אורטל ריינהרץ','ענת יגיל','אלן שיין','ליעד כהן','שחר גרוסמן','ליאת צוריאל','דניאל רוטנר']},
+{day:'שני',b2:['אמיר כהן','יוסי שרביט','אפרת רייף בק','ליעד כהן','מרי חנאני','רותם מאיזלס','ערן בן עזרא','גיל פוניאה','מוטי גלשטיין','אלינה וקסמן'],b4:['גלי בכר','נסיה דהן','גפן ורדי','גולן דיין','שוש לוי','מירב יונני','אלירן נחמה','דנה בן יאיר','שי אמנוני','מני וייס']},
+{day:'שלישי',b2:['דקלה ירושלמי','זוהר אביאל','נילי גפן','רוית ברקן','דניאל סוויד','אורה אוסיפוב','קרן בר','מוטי דקל','ליאת צוריאל','דלית ברנע'],b4:['נסיה דהן','נירית סופר','איציק ביליה','אורטל ריינהרץ','טל בר','נועם מרלי','לבנת שיינמן','מאיה חנניה','איריס מקמל','רותם מאיזלס']},
+{day:'רביעי',b2:['גפן ורדי','רעיה אזולאי','לבנת שיינמן','רן ארהרד','יאנה לדנוב','מירב יונני','דורון אלגרבלי','רימון שלוש','איתי בן טל','אלירז נחמה'],b4:['דקלה ירושלמי','מרי חנאני','אביאל זוהר','עדי דאר','ליאת דוידוביץ','ליעד כהן','אמיר כהן','אורה אוסיפוב','גיל פוניאה','תמר קושניר']},
+{day:'חמישי',b2:['אלן שיין','אור אבוטבול','מאיה חנניה','טל בר','לודמילה פאולייקו','תמר קושניר','אלירז פלק','איריס מקמל','איציק אוחיון','מני וייס'],b4:['שחר גרוסמן','גולן דיין','אביב בר לב','דלית ברנע','קרן בר','דניאל סוויד','ערן בן עזרא','אפרת רייף בק','יגאל בוכריס','דנה בן יאיר']}
 ];
+
+/*
+ * Migrate known errors from the previously imported duty table.
+ * Narrow checks preserve unrelated manual edits in other cells.
+ */
+function normalizeRosterCell(value) {
+  return String(value ?? "").trim().replace(/\s+/g, " ");
+}
+function cellHas(value, ...tokens) {
+  const text = normalizeRosterCell(value);
+  return tokens.every(token => text.includes(token));
+}
+function correctKnownRosterAssignments(sourceRoster) {
+  const roster = (Array.isArray(sourceRoster) ? sourceRoster : defaultRoster).map(row => ({
+    ...row,
+    b2: Array.isArray(row.b2) ? [...row.b2] : [],
+    b4: Array.isArray(row.b4) ? [...row.b4] : []
+  }));
+  let changed = false;
+  const setCell = (row, key, index, value) => {
+    if (row[key][index] !== value) {
+      row[key][index] = value;
+      changed = true;
+    }
+  };
+  const findDay = day => roster.find(row => row.day === day);
+
+  // Tuesday break 2: two names were merged in one area, shifting the final areas.
+  const tuesday = findDay("שלישי");
+  if (tuesday && cellHas(tuesday.b2[6], "דקל", "מוטי", "בר", "קרן")
+      && cellHas(tuesday.b2[7], "צוריאל")
+      && cellHas(tuesday.b2[8], "ברנע")
+      && !normalizeRosterCell(tuesday.b2[9])) {
+    setCell(tuesday, "b2", 6, "קרן בר");
+    setCell(tuesday, "b2", 7, "מוטי דקל");
+    setCell(tuesday, "b2", 8, "ליאת צוריאל");
+    setCell(tuesday, "b2", 9, "דלית ברנע");
+  }
+
+  // Wednesday break 4: Amir Cohen and Liad Cohen were merged into one area.
+  const wednesday = findDay("רביעי");
+  if (wednesday && cellHas(wednesday.b4[5], "כהן", "אמיר", "ליעד")
+      && cellHas(wednesday.b4[6], "אוסיפוב")
+      && cellHas(wednesday.b4[7], "פוניאה")
+      && cellHas(wednesday.b4[8], "קושניר")
+      && !normalizeRosterCell(wednesday.b4[9])) {
+    setCell(wednesday, "b4", 5, "ליעד כהן");
+    setCell(wednesday, "b4", 6, "אמיר כהן");
+    setCell(wednesday, "b4", 7, "אורה אוסיפוב");
+    setCell(wednesday, "b4", 8, "גיל פוניאה");
+    setCell(wednesday, "b4", 9, "תמר קושניר");
+  }
+
+  // Thursday break 2: four cells had given names only, and one family name was wrong.
+  const thursday = findDay("חמישי");
+  if (thursday && cellHas(thursday.b2[5], "תמר")
+      && cellHas(thursday.b2[6], "אלירז")
+      && cellHas(thursday.b2[7], "איריס")
+      && cellHas(thursday.b2[8], "איציק")
+      && cellHas(thursday.b2[9], "וייס")) {
+    setCell(thursday, "b2", 5, "תמר קושניר");
+    setCell(thursday, "b2", 6, "אלירז פלק");
+    setCell(thursday, "b2", 7, "איריס מקמל");
+    setCell(thursday, "b2", 8, "איציק אוחיון");
+    setCell(thursday, "b2", 9, "מני וייס");
+  }
+
+  const monday = findDay("שני");
+  if (monday && normalizeRosterCell(monday.b2[9]) === "אלינה קסמן") {
+    setCell(monday, "b2", 9, "אלינה וקסמן");
+  }
+
+  if (wednesday && cellHas(wednesday.b2[6], "דורון")
+      && (cellHas(wednesday.b2[6], "אלרגבלי") || cellHas(wednesday.b2[6], "אלגרבלי"))) {
+    setCell(wednesday, "b2", 6, "דורון אלגרבלי");
+  }
+
+  return { roster, changed };
+}
+
+let pendingRosterMigration = null;
+let rosterMigrationInFlight = false;
+async function persistRosterMigrationIfAdmin() {
+  const user = auth.currentUser;
+  if (!pendingRosterMigration || rosterMigrationInFlight || !user || user.uid !== ADMIN_UID) return;
+  const rosterToSave = pendingRosterMigration;
+  rosterMigrationInFlight = true;
+  try {
+    await updateDoc(siteDoc, {
+      roster: rosterToSave,
+      updatedAt: serverTimestamp(),
+      updatedBy: user.uid
+    });
+    if (pendingRosterMigration === rosterToSave) pendingRosterMigration = null;
+  } catch (error) {
+    console.warn("Roster correction could not be saved to Firestore; corrected display remains active.", error);
+  } finally {
+    rosterMigrationInFlight = false;
+  }
+}
+
 let state={roster:defaultRoster,notices:[{id:1,text:'ברוכים הבאים לחדר המורים אורט שחקים'}],city:'נהריה',ticker:''};
 try{const saved=localStorage.getItem('shakimStaffScreen');if(saved){const parsed=JSON.parse(saved);state={...state,...parsed};if(!Array.isArray(state.roster?.[0]?.b2)){state.roster=defaultRoster}}}catch(e){}
+state.roster = correctKnownRosterAssignments(state.roster).roster;
 
 const weekdays=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 function todayName(){return weekdays[new Date().getDay()]}
@@ -44,7 +147,14 @@ initAdmin({ auth, db, siteDoc, ADMIN_UID, state, areas, escapeHtml, renderDuties
 onSnapshot(siteDoc, snapshot => {
   if (!snapshot.exists()) return;
   const remote = snapshot.data() || {};
-  if (Array.isArray(remote.roster) && remote.roster.length) state.roster = remote.roster;
+  if (Array.isArray(remote.roster) && remote.roster.length) {
+    const correction = correctKnownRosterAssignments(remote.roster);
+    state.roster = correction.roster;
+    if (correction.changed) {
+      pendingRosterMigration = correction.roster;
+      persistRosterMigrationIfAdmin();
+    }
+  }
   if (Array.isArray(remote.notices)) state.notices = remote.notices;
   if (typeof remote.city === "string" && remote.city.trim()) state.city = remote.city;
   if (typeof remote.ticker === "string") state.ticker = remote.ticker;
@@ -54,6 +164,10 @@ onSnapshot(siteDoc, snapshot => {
   loadWeather();
 }, error => {
   console.error("Main dashboard Firestore listener failed", error);
+});
+
+onAuthStateChanged(auth, user => {
+  if (user && user.uid === ADMIN_UID) persistRosterMigrationIfAdmin();
 });
 
 formatDates();
