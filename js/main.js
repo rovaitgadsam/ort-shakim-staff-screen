@@ -21,7 +21,7 @@ let state={roster:defaultRoster,notices:[{id:1,text:'ברוכים הבאים ל�
 try{const saved=localStorage.getItem('shakimStaffScreen');if(saved){const parsed=JSON.parse(saved);state={...state,...parsed};if(!Array.isArray(state.roster?.[0]?.b2)){state.roster=defaultRoster}}}catch(e){}
 
 const weekdays=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
-function todayName(){return weekdays[(new Date().getDay()+6)%7]}
+function todayName(){return weekdays[new Date().getDay()]}
 function punctuateHebrewNumber(s){return s.length===1?s+"׳":s.slice(0,-1)+"״"+s.slice(-1)}
 function numberToHebrew(n){if(n===15)return 'ט״ו';if(n===16)return 'ט״ז';const letters={1:'א',2:'ב',3:'ג',4:'ד',5:'ה',6:'ו',7:'ז',8:'ח',9:'ט',10:'י',20:'כ',30:'ל'};if(letters[n])return punctuateHebrewNumber(letters[n]);let raw='';if(n>=20){raw='כ';n-=20}else if(n>=10){raw='י';n-=10}if(n===15)return 'ט״ו';if(n===16)return 'ט״ז';raw+=(letters[n]||'');return raw?punctuateHebrewNumber(raw):''}
 function yearToHebrew(y){let n=y%1000;const vals=[[400,'ת'],[300,'ש'],[200,'ר'],[100,'ק'],[90,'צ'],[80,'פ'],[70,'ע'],[60,'ס'],[50,'נ'],[40,'מ'],[30,'ל'],[20,'כ'],[10,'י'],[9,'ט'],[8,'ח'],[7,'ז'],[6,'ו'],[5,'ה'],[4,'ד'],[3,'ג'],[2,'ב'],[1,'א']];let s='';for(const [v,l] of vals){while(n>=v){s+=l;n-=v}}return punctuateHebrewNumber(s)}
