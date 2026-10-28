@@ -1,4 +1,5 @@
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+import { formatStaffName } from "./birthdays.js";
 import { collection, query, orderBy, onSnapshot, deleteDoc, updateDoc, arrayUnion, serverTimestamp, doc, setDoc } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
 export function initAdmin({ auth, db, siteDoc, ADMIN_UID, state, areas, escapeHtml, renderDuties, renderNotices, loadWeather }) {
@@ -45,7 +46,7 @@ function renderPendingMessages() {
     return;
   }
   root.innerHTML = pendingMessageItems.map(item => {
-    const sender = typeof item.senderName === "string" && item.senderName.trim() ? item.senderName.trim() : "ללא שם";
+    const sender = typeof item.senderName === "string" && item.senderName.trim() ? formatStaffName(item.senderName.trim()) : "ללא שם";
     const timestamp = item.createdAt && typeof item.createdAt.toDate === "function"
       ? item.createdAt.toDate().toLocaleString("he-IL", { dateStyle: "short", timeStyle: "short" })
       : "התקבלה כעת";
@@ -65,7 +66,7 @@ async function handleMessageAction(action, submissionId) {
   try {
     if (action === "approve") {
       const text = String(submission.text || "").trim();
-      const sender = String(submission.senderName || "").trim();
+      const sender = formatStaffName(String(submission.senderName || "").trim());
       if (!text) throw new Error("ההודעה ריקה");
       const displayText = sender ? sender + ": " + text : text;
       await updateDoc(siteDoc, {
@@ -84,6 +85,13 @@ async function handleMessageAction(action, submissionId) {
   }
 }
 
+function formatNoticeEditorText(value) {
+  const text = String(value ?? "");
+  const match = text.match(/^([^:\n]{2,60}:)(\s*)/);
+  if (!match) return text;
+  return formatStaffName(match[1].slice(0, -1)) + ":" + match[2] + text.slice(match[0].length);
+}
+
 function setCloudStatus(message) {
   const node = document.getElementById("cloudStatus");
   if (node) node.textContent = message;
@@ -96,8 +104,8 @@ function showLoginError(message) {
 
 
 
-function renderEditors(){document.getElementById('rosterEditor').innerHTML=state.roster.map((r,i)=>`<div class="roster-row"><h4>${r.day}</h4>${[{key:'b2',title:'הפסקה 2, 09:35–09:55'},{key:'b4',title:'הפסקה 4, 11:30–11:40'}].map(period=>`<div style="margin-top:12px"><strong>${period.title}</strong><div class="roster-zone-grid" style="margin-top:8px">${areas.map((area,j)=>`<div class="zone-field"><label>${escapeHtml(area)}</label><input data-roster="${i}" data-period="${period.key}" data-area="${j}" value="${escapeHtml((r[period.key]||[])[j]||'')}" /></div>`).join('')}</div></div>`).join('')}</div>`).join('');
-document.getElementById('noticeEditor').innerHTML=state.notices.map((n,i)=>`<div class="roster-row"><div class="field"><label>הודעה ${i+1}</label><textarea data-notice="${i}">${escapeHtml(n.text)}</textarea></div><button class="btn danger" data-delete="${i}">מחיקת הודעה</button></div>`).join('');document.getElementById('city').value=state.city||'נהריה';document.getElementById('ticker').value=state.ticker||''}
+function renderEditors(){document.getElementById('rosterEditor').innerHTML=state.roster.map((r,i)=>`<div class="roster-row"><h4>${r.day}</h4>${[{key:'b2',title:'הפסקה 2, 09:35–09:55'},{key:'b4',title:'הפסקה 4, 11:30–11:40'}].map(period=>`<div style="margin-top:12px"><strong>${period.title}</strong><div class="roster-zone-grid" style="margin-top:8px">${areas.map((area,j)=>`<div class="zone-field"><label>${escapeHtml(area)}</label><input data-roster="${i}" data-period="${period.key}" data-area="${j}" value="${escapeHtml(formatStaffName((r[period.key]||[])[j]||''))}" /></div>`).join('')}</div></div>`).join('')}</div>`).join('');
+document.getElementById('noticeEditor').innerHTML=state.notices.map((n,i)=>`<div class="roster-row"><div class="field"><label>הודעה ${i+1}</label><textarea data-notice="${i}">${escapeHtml(formatNoticeEditorText(n.text))}</textarea></div><button class="btn danger" data-delete="${i}">מחיקת הודעה</button></div>`).join('');document.getElementById('city').value=state.city||'נהריה';document.getElementById('ticker').value=state.ticker||''}
 async function saveFromEditor(){
   if (!isAdmin()) {
     setCloudStatus("נדרשת כניסת מנהל כדי לשמור שינויים.");
